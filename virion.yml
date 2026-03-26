@@ -1,0 +1,8 @@
+name: QueryServerCore
+antigen: NhanAZ\\QueryServer
+api: 5.0.0
+version: 0.0.3
+authors:
+  - NhanAZ
+description: Core library for async server querying (HTTP v3 + UDP fallback)
+license: LGPL-3.0-or-later

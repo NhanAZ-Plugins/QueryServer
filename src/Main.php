@@ -77,6 +77,7 @@ final class Main extends PluginBase {
 		$console = new ConsoleCommandSender(Server::getInstance(), Server::getInstance()->getLanguage());
 
 		$address = is_array($result) ? ($result["address"] ?? null) : null;
+		$requestId = is_array($result) ? ($result["requestId"] ?? null) : null;
 		[$host, $port] = self::splitAddress($address);
 
 		$apiShown = false;
@@ -89,17 +90,33 @@ final class Main extends PluginBase {
 		} else {
 			$error = is_array($result) ? ($result["error"] ?? "Unknown error") : "No data returned";
 			$console->sendMessage(self::info("Primary API failed: " . $error));
+
+			if ($requestId !== null && self::getInstance()->deliverCallback($requestId, ["ok" => false, "source" => "api", "error" => $error])) {
+				// still allow fallback to run if available
+			}
 		}
 
 		if ($host !== null && $port !== null) {
 			$console->sendMessage(self::info("Using fallback UDP query..."));
-			Server::getInstance()->getAsyncPool()->submitTask(new FallbackQueryTask($host, $port));
+			Server::getInstance()->getAsyncPool()->submitTask(new FallbackQueryTask($host, $port, requestId: $result["requestId"] ?? null));
 			return;
 		}
 
 		if (!$apiShown && !$fallbackShown) {
 			$console->sendMessage(self::error("The server is offline or has blocked queries!"));
 			$console->sendMessage(self::info("Try another query method using /query <domain> <port>"));
+
+			if ($requestId !== null) {
+				self::getInstance()->deliverCallback($requestId, ["ok" => false, "source" => "api", "error" => "offline or blocked"]);
+			}
+		} elseif ($apiShown && $requestId !== null) {
+			// deliver API success to caller (even if fallback scheduled elsewhere, which returns separately)
+			self::getInstance()->deliverCallback($requestId, [
+				"ok" => true,
+				"source" => "api",
+				"address" => $address,
+				"data" => $result["data"] ?? null
+			]);
 		}
 	}
 

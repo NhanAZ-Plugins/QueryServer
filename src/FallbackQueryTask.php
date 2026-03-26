@@ -17,9 +17,6 @@ class FallbackQueryTask extends AsyncTask {
 	}
 
 	public function onRun(): void {
-		require_once dirname(__DIR__) . "/src/libpmquery/PMQuery.php";
-		require_once dirname(__DIR__) . "/src/libpmquery/PmQueryException.php";
-
 		$result = [
 			"ok" => false,
 			"host" => $this->host,

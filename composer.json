@@ -1,6 +1,6 @@
 {
-  "name": "nhanaz/queryserver",
-  "description": "Query information of other Minecraft servers via HTTP API v3 with UDP fallback.",
+  "name": "nhanaz-libraries/queryserver",
+  "description": "QueryServerCore virion + QueryServer plugin: async HTTP (api.mcsrvstat.us v3) with UDP fallback.",
   "type": "project",
   "license": "LGPL-3.0-or-later",
   "require": {
