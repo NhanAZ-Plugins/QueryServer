@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Example\QueryConsumer;
 
-use NhanAZ\QueryServer\Main as QueryServerMain;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\plugin\PluginBase;
@@ -16,7 +15,13 @@ final class Main extends PluginBase {
 			return false;
 		}
 
-		$api = QueryServerMain::getInstance()->getApi();
+		$queryServer = $this->getServer()->getPluginManager()->getPlugin("QueryServer");
+		if (!is_object($queryServer) || !method_exists($queryServer, "getApi")) {
+			$sender->sendMessage("QueryServer plugin is not loaded.");
+			return true;
+		}
+
+		$api = $queryServer->getApi();
 		$sender->sendMessage("Querying test.pmmp.io:19132 via QueryServer...");
 
 		$api->query("test.pmmp.io", 19132, function (array $result) use ($sender): void {

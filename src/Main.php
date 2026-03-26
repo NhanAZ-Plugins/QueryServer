@@ -81,7 +81,6 @@ final class Main extends PluginBase {
 		[$host, $port] = self::splitAddress($address);
 
 		$apiShown = false;
-		$fallbackShown = false;
 
 		if (is_array($result) && ($result["ok"] ?? false) === true && is_object($result["data"] ?? null)) {
 			/** @var object $status */
@@ -102,7 +101,7 @@ final class Main extends PluginBase {
 			return;
 		}
 
-		if (!$apiShown && !$fallbackShown) {
+		if (!$apiShown) {
 			$console->sendMessage(self::error("The server is offline or has blocked queries!"));
 			$console->sendMessage(self::info("Try another query method using /query <domain> <port>"));
 
@@ -257,7 +256,7 @@ final class Main extends PluginBase {
 		self::sendLegacyQuery($console, $payload["data"]);
 	}
 
-	private static function splitAddress(?string $address): array {
+	public static function splitAddress(?string $address): array {
 		if ($address !== null && str_contains($address, ":")) {
 			[$host, $port] = explode(":", $address, 2);
 			$host = $host !== "" ? $host : null;
