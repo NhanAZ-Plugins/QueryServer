@@ -3,14 +3,9 @@ build-by-default: true
 branches:
 - master
 projects:
-  QueryServerCore:
-    type: library
-    path: ""
   QueryServer:
     path: ""
-    libs:
-      - src: NhanAZ-Libraries/QueryServer/QueryServerCore
-        version: ^0.0.3
+    libs: []
   QueryConsumerExample:
     path: examples/QueryConsumer
     depend:
