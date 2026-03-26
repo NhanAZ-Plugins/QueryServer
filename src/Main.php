@@ -287,10 +287,7 @@ final class Main extends PluginBase {
 		}
 		$cb = $this->callbacks[$id];
 		unset($this->callbacks[$id]);
-		if (is_callable($cb)) {
-			$cb($payload);
-			return true;
-		}
-		return false;
+		$cb($payload);
+		return true;
 	}
 }
